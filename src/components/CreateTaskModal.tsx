@@ -5,18 +5,27 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { TeamMember, Priority, Task } from '@/types/task';
+import { Profile } from '@/hooks/useTasks';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+
+type Priority = 'high' | 'medium' | 'low';
 
 interface CreateTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
-  members: TeamMember[];
-  onCreateTask: (task: Omit<Task, 'id' | 'createdAt' | 'comments'>) => void;
+  memberProfiles: Profile[];
+  onCreateTask: (task: {
+    title: string;
+    description: string;
+    priority: Priority;
+    assignee_id: string;
+    deadline: Date;
+    tags: string[];
+  }) => Promise<{ error: Error | null }>;
 }
 
 const priorityOptions: { value: Priority; label: string }[] = [
@@ -25,37 +34,40 @@ const priorityOptions: { value: Priority; label: string }[] = [
   { value: 'low', label: 'Low' },
 ];
 
-export const CreateTaskModal = ({ isOpen, onClose, members, onCreateTask }: CreateTaskModalProps) => {
+export const CreateTaskModal = ({ isOpen, onClose, memberProfiles, onCreateTask }: CreateTaskModalProps) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState<Priority>('medium');
   const [assigneeId, setAssigneeId] = useState('');
   const [deadline, setDeadline] = useState<Date>();
   const [tags, setTags] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title || !assigneeId || !deadline) return;
 
-    onCreateTask({
+    setIsLoading(true);
+    const { error } = await onCreateTask({
       title,
       description,
       priority,
-      status: 'todo',
-      assigneeId,
-      createdById: '1', // Current user (leader)
+      assignee_id: assigneeId,
       deadline,
       tags: tags.split(',').map(t => t.trim()).filter(Boolean),
     });
+    setIsLoading(false);
 
-    // Reset form
-    setTitle('');
-    setDescription('');
-    setPriority('medium');
-    setAssigneeId('');
-    setDeadline(undefined);
-    setTags('');
-    onClose();
+    if (!error) {
+      // Reset form
+      setTitle('');
+      setDescription('');
+      setPriority('medium');
+      setAssigneeId('');
+      setDeadline(undefined);
+      setTags('');
+      onClose();
+    }
   };
 
   return (
@@ -112,11 +124,17 @@ export const CreateTaskModal = ({ isOpen, onClose, members, onCreateTask }: Crea
                   <SelectValue placeholder="Select member" />
                 </SelectTrigger>
                 <SelectContent>
-                  {members.filter(m => m.role === 'member').map(member => (
-                    <SelectItem key={member.id} value={member.id}>
-                      {member.name}
-                    </SelectItem>
-                  ))}
+                  {memberProfiles.length === 0 ? (
+                    <div className="px-2 py-4 text-sm text-muted-foreground text-center">
+                      No team members yet
+                    </div>
+                  ) : (
+                    memberProfiles.map(member => (
+                      <SelectItem key={member.id} value={member.id}>
+                        {member.display_name}
+                      </SelectItem>
+                    ))
+                  )}
                 </SelectContent>
               </Select>
             </div>
@@ -163,7 +181,12 @@ export const CreateTaskModal = ({ isOpen, onClose, members, onCreateTask }: Crea
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit" variant="gradient" disabled={!title || !assigneeId || !deadline}>
+            <Button 
+              type="submit" 
+              variant="gradient" 
+              disabled={!title || !assigneeId || !deadline || isLoading}
+            >
+              {isLoading && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
               Create Task
             </Button>
           </div>

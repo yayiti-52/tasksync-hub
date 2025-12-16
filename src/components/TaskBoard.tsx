@@ -1,9 +1,12 @@
-import { Task, TeamMember, Status } from '@/types/task';
+import { Task, Profile, TaskComment } from '@/hooks/useTasks';
 import { TaskColumn } from './TaskColumn';
+
+type Status = 'todo' | 'in-progress' | 'review' | 'done';
 
 interface TaskBoardProps {
   tasks: Task[];
-  members: TeamMember[];
+  profiles: Profile[];
+  comments: Record<string, TaskComment[]>;
   onTaskClick: (task: Task) => void;
 }
 
@@ -14,7 +17,7 @@ const columns: { title: string; status: Status }[] = [
   { title: 'Done', status: 'done' },
 ];
 
-export const TaskBoard = ({ tasks, members, onTaskClick }: TaskBoardProps) => {
+export const TaskBoard = ({ tasks, profiles, comments, onTaskClick }: TaskBoardProps) => {
   return (
     <div className="flex gap-4 overflow-x-auto pb-4 px-6">
       {columns.map((column) => (
@@ -23,7 +26,8 @@ export const TaskBoard = ({ tasks, members, onTaskClick }: TaskBoardProps) => {
           title={column.title}
           status={column.status}
           tasks={tasks.filter(t => t.status === column.status)}
-          members={members}
+          profiles={profiles}
+          comments={comments}
           onTaskClick={onTaskClick}
         />
       ))}
