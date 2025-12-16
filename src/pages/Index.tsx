@@ -4,20 +4,31 @@ import { TeamSidebar } from '@/components/TeamSidebar';
 import { TaskBoard } from '@/components/TaskBoard';
 import { TaskDetailModal } from '@/components/TaskDetailModal';
 import { CreateTaskModal } from '@/components/CreateTaskModal';
-import { teamMembers, initialTasks } from '@/data/mockData';
-import { Task, Status, Comment } from '@/types/task';
-import { useToast } from '@/hooks/use-toast';
+import { useTasks, Task } from '@/hooks/useTasks';
+import { useAuth } from '@/hooks/useAuth';
+import { Loader2 } from 'lucide-react';
 
 const Index = () => {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const { role } = useAuth();
+  const { 
+    tasks, 
+    comments, 
+    profiles, 
+    loading, 
+    createTask, 
+    updateTaskStatus, 
+    addComment,
+    getMemberProfiles,
+    getProfileRole,
+  } = useTasks();
+  
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const { toast } = useToast();
 
   const taskCountsByMember = tasks.reduce((acc, task) => {
-    if (task.status !== 'done') {
-      acc[task.assigneeId] = (acc[task.assigneeId] || 0) + 1;
+    if (task.status !== 'done' && task.assignee_id) {
+      acc[task.assignee_id] = (acc[task.assignee_id] || 0) + 1;
     }
     return acc;
   }, {} as Record<string, number>);
@@ -27,76 +38,79 @@ const Index = () => {
     setIsDetailOpen(true);
   };
 
-  const handleUpdateStatus = (taskId: string, status: Status) => {
-    setTasks(prev => prev.map(t => 
-      t.id === taskId ? { ...t, status } : t
-    ));
+  const handleUpdateStatus = (taskId: string, status: Task['status']) => {
+    updateTaskStatus(taskId, status);
     setSelectedTask(prev => prev?.id === taskId ? { ...prev, status } : prev);
-    
-    toast({
-      title: "Status updated",
-      description: `Task moved to ${status.replace('-', ' ')}`,
-    });
   };
 
   const handleAddComment = (taskId: string, content: string) => {
-    const newComment: Comment = {
-      id: `c${Date.now()}`,
-      authorId: '1', // Current user
-      content,
-      createdAt: new Date(),
-    };
+    addComment(taskId, content);
+  };
 
-    setTasks(prev => prev.map(t => 
-      t.id === taskId ? { ...t, comments: [...t.comments, newComment] } : t
-    ));
-    setSelectedTask(prev => 
-      prev?.id === taskId ? { ...prev, comments: [...prev.comments, newComment] } : prev
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center">
+            <span className="text-primary-foreground font-bold text-xl">T</span>
+          </div>
+          <Loader2 className="w-6 h-6 animate-spin text-primary" />
+          <p className="text-muted-foreground">Loading tasks...</p>
+        </div>
+      </div>
     );
-  };
-
-  const handleCreateTask = (taskData: Omit<Task, 'id' | 'createdAt' | 'comments'>) => {
-    const newTask: Task = {
-      ...taskData,
-      id: `${Date.now()}`,
-      createdAt: new Date(),
-      comments: [],
-    };
-
-    setTasks(prev => [newTask, ...prev]);
-    
-    toast({
-      title: "Task created",
-      description: `"${taskData.title}" has been assigned`,
-    });
-  };
+  }
 
   return (
     <div className="min-h-screen bg-background">
       <Header onCreateTask={() => setIsCreateOpen(true)} />
       
       <div className="flex">
-        <TeamSidebar members={teamMembers} taskCounts={taskCountsByMember} />
+        <TeamSidebar 
+          profiles={profiles} 
+          taskCounts={taskCountsByMember}
+          getProfileRole={getProfileRole}
+        />
         
         <main className="flex-1 py-6 overflow-hidden">
           <div className="px-6 mb-6">
             <h1 className="text-2xl font-display font-bold">Project Tasks</h1>
             <p className="text-muted-foreground mt-1">
-              Track and manage your team's progress
+              {role === 'leader' 
+                ? 'Create and manage your team\'s tasks' 
+                : 'Track and update your assigned tasks'}
             </p>
           </div>
           
-          <TaskBoard 
-            tasks={tasks} 
-            members={teamMembers} 
-            onTaskClick={handleTaskClick}
-          />
+          {tasks.length === 0 ? (
+            <div className="px-6">
+              <div className="bg-card rounded-xl border border-border p-12 text-center">
+                <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center mx-auto mb-4">
+                  <span className="text-primary-foreground font-bold text-2xl">T</span>
+                </div>
+                <h2 className="text-xl font-semibold mb-2">No tasks yet</h2>
+                <p className="text-muted-foreground max-w-md mx-auto">
+                  {role === 'leader' 
+                    ? 'Create your first task to get your team started. Click the "New Task" button above.'
+                    : 'No tasks have been assigned to you yet. Check back later!'}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <TaskBoard 
+              tasks={tasks} 
+              profiles={profiles}
+              comments={comments}
+              onTaskClick={handleTaskClick}
+            />
+          )}
         </main>
       </div>
 
       <TaskDetailModal
         task={selectedTask}
-        members={teamMembers}
+        profiles={profiles}
+        comments={selectedTask ? (comments[selectedTask.id] || []) : []}
         isOpen={isDetailOpen}
         onClose={() => setIsDetailOpen(false)}
         onUpdateStatus={handleUpdateStatus}
@@ -106,8 +120,8 @@ const Index = () => {
       <CreateTaskModal
         isOpen={isCreateOpen}
         onClose={() => setIsCreateOpen(false)}
-        members={teamMembers}
-        onCreateTask={handleCreateTask}
+        memberProfiles={getMemberProfiles()}
+        onCreateTask={createTask}
       />
     </div>
   );

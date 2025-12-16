@@ -1,12 +1,15 @@
-import { Bell, Search, Plus } from 'lucide-react';
+import { Bell, Search, Plus, LogOut, Crown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useAuth } from '@/hooks/useAuth';
 
 interface HeaderProps {
   onCreateTask: () => void;
 }
 
 export const Header = ({ onCreateTask }: HeaderProps) => {
+  const { profile, role, signOut } = useAuth();
+
   return (
     <header className="h-16 border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
       <div className="h-full px-6 flex items-center justify-between">
@@ -33,13 +36,24 @@ export const Header = ({ onCreateTask }: HeaderProps) => {
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full" />
           </Button>
           
-          <Button onClick={onCreateTask} variant="gradient" className="gap-2">
-            <Plus className="w-4 h-4" />
-            <span className="hidden sm:inline">New Task</span>
+          {role === 'leader' && (
+            <Button onClick={onCreateTask} variant="gradient" className="gap-2">
+              <Plus className="w-4 h-4" />
+              <span className="hidden sm:inline">New Task</span>
+            </Button>
+          )}
+
+          <Button variant="ghost" size="icon" onClick={signOut}>
+            <LogOut className="w-5 h-5" />
           </Button>
           
-          <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium text-primary">
-            SC
+          <div className="flex items-center gap-2">
+            <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium text-primary">
+              {profile?.avatar_initials || 'U'}
+            </div>
+            {role === 'leader' && (
+              <Crown className="w-4 h-4 text-primary" />
+            )}
           </div>
         </div>
       </div>

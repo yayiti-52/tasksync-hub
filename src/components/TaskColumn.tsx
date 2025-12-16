@@ -1,12 +1,15 @@
-import { Task, TeamMember, Status } from '@/types/task';
+import { Task, Profile, TaskComment } from '@/hooks/useTasks';
 import { TaskCard } from './TaskCard';
 import { cn } from '@/lib/utils';
+
+type Status = 'todo' | 'in-progress' | 'review' | 'done';
 
 interface TaskColumnProps {
   title: string;
   status: Status;
   tasks: Task[];
-  members: TeamMember[];
+  profiles: Profile[];
+  comments: Record<string, TaskComment[]>;
   onTaskClick: (task: Task) => void;
 }
 
@@ -17,7 +20,7 @@ const statusConfig: Record<Status, { color: string; bgColor: string }> = {
   'done': { color: 'bg-status-done', bgColor: 'bg-status-done/10' },
 };
 
-export const TaskColumn = ({ title, status, tasks, members, onTaskClick }: TaskColumnProps) => {
+export const TaskColumn = ({ title, status, tasks, profiles, comments, onTaskClick }: TaskColumnProps) => {
   const config = statusConfig[status];
   
   return (
@@ -36,7 +39,8 @@ export const TaskColumn = ({ title, status, tasks, members, onTaskClick }: TaskC
             <TaskCard
               key={task.id}
               task={task}
-              assignee={members.find(m => m.id === task.assigneeId)}
+              assignee={profiles.find(p => p.id === task.assignee_id)}
+              commentCount={comments[task.id]?.length || 0}
               onClick={() => onTaskClick(task)}
             />
           ))}

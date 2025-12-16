@@ -4,13 +4,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Task, TeamMember, Status, Priority, Comment } from '@/types/task';
-import { format } from 'date-fns';
+import { Task, Profile, TaskComment } from '@/hooks/useTasks';
+import { format, parseISO } from 'date-fns';
 import { cn } from '@/lib/utils';
+
+type Status = 'todo' | 'in-progress' | 'review' | 'done';
+type Priority = 'high' | 'medium' | 'low';
 
 interface TaskDetailModalProps {
   task: Task | null;
-  members: TeamMember[];
+  profiles: Profile[];
+  comments: TaskComment[];
   isOpen: boolean;
   onClose: () => void;
   onUpdateStatus: (taskId: string, status: Status) => void;
@@ -32,7 +36,8 @@ const priorityConfig: Record<Priority, { label: string; class: string }> = {
 
 export const TaskDetailModal = ({
   task,
-  members,
+  profiles,
+  comments,
   isOpen,
   onClose,
   onUpdateStatus,
@@ -42,8 +47,10 @@ export const TaskDetailModal = ({
 
   if (!task) return null;
 
-  const assignee = members.find(m => m.id === task.assigneeId);
-  const creator = members.find(m => m.id === task.createdById);
+  const assignee = profiles.find(p => p.id === task.assignee_id);
+  const creator = profiles.find(p => p.id === task.created_by_id);
+  const deadline = parseISO(task.deadline);
+  const createdAt = parseISO(task.created_at);
 
   const handleAddComment = () => {
     if (newComment.trim()) {
@@ -72,7 +79,7 @@ export const TaskDetailModal = ({
                 {task.title}
               </DialogTitle>
               <p className="text-sm text-muted-foreground mt-1">
-                Created by {creator?.name} on {format(task.createdAt, 'MMM d, yyyy')}
+                Created by {creator?.display_name || 'Unknown'} on {format(createdAt, 'MMM d, yyyy')}
               </p>
             </div>
           </div>
@@ -101,7 +108,7 @@ export const TaskDetailModal = ({
               <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Assignee</label>
               <div className="flex items-center gap-2 h-10 px-3 rounded-md border border-input bg-background">
                 <User className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm">{assignee?.name || 'Unassigned'}</span>
+                <span className="text-sm">{assignee?.display_name || 'Unassigned'}</span>
               </div>
             </div>
 
@@ -109,7 +116,7 @@ export const TaskDetailModal = ({
               <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Due Date</label>
               <div className="flex items-center gap-2 h-10 px-3 rounded-md border border-input bg-background">
                 <Calendar className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm">{format(task.deadline, 'MMM d, yyyy')}</span>
+                <span className="text-sm">{format(deadline, 'MMM d, yyyy')}</span>
               </div>
             </div>
 
@@ -126,15 +133,17 @@ export const TaskDetailModal = ({
           </div>
 
           {/* Description */}
-          <div className="space-y-2">
-            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Description</label>
-            <p className="text-sm leading-relaxed text-foreground/90 bg-muted/30 rounded-lg p-4">
-              {task.description}
-            </p>
-          </div>
+          {task.description && (
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Description</label>
+              <p className="text-sm leading-relaxed text-foreground/90 bg-muted/30 rounded-lg p-4">
+                {task.description}
+              </p>
+            </div>
+          )}
 
           {/* Tags */}
-          {task.tags.length > 0 && (
+          {task.tags && task.tags.length > 0 && (
             <div className="space-y-2">
               <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
                 <Tag className="w-3.5 h-3.5" />
@@ -154,22 +163,23 @@ export const TaskDetailModal = ({
           <div className="space-y-3">
             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
               <MessageSquare className="w-3.5 h-3.5" />
-              Discussion ({task.comments.length})
+              Discussion ({comments.length})
             </label>
             
             <div className="space-y-3 max-h-48 overflow-y-auto">
-              {task.comments.map((comment) => {
-                const author = members.find(m => m.id === comment.authorId);
+              {comments.map((comment) => {
+                const author = profiles.find(p => p.id === comment.author_id);
+                const commentDate = parseISO(comment.created_at);
                 return (
                   <div key={comment.id} className="flex gap-3 animate-fade-in">
                     <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-xs font-medium text-muted-foreground flex-shrink-0">
-                      {author?.avatar || '?'}
+                      {author?.avatar_initials || '?'}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-baseline gap-2">
-                        <span className="text-sm font-medium">{author?.name || 'Unknown'}</span>
+                        <span className="text-sm font-medium">{author?.display_name || 'Unknown'}</span>
                         <span className="text-xs text-muted-foreground">
-                          {format(comment.createdAt, 'MMM d, h:mm a')}
+                          {format(commentDate, 'MMM d, h:mm a')}
                         </span>
                       </div>
                       <p className="text-sm text-foreground/80 mt-0.5">{comment.content}</p>
@@ -178,7 +188,7 @@ export const TaskDetailModal = ({
                 );
               })}
               
-              {task.comments.length === 0 && (
+              {comments.length === 0 && (
                 <p className="text-sm text-muted-foreground text-center py-4">
                   No comments yet. Start the discussion!
                 </p>
