@@ -12,21 +12,26 @@ export const Header = ({ onCreateTask }: HeaderProps) => {
   const { profile, role, signOut } = useAuth();
 
   return (
-    <header className="h-16 border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-      <div className="h-full px-6 flex items-center justify-between">
+    <header className="h-18 border-b-2 border-double border-border bg-card/80 backdrop-blur-sm sticky top-0 z-40">
+      <div className="h-full px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-8">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">T</span>
+          <div className="flex items-center gap-3">
+            <div className="art-frame">
+              <div className="w-10 h-10 flex items-center justify-center">
+                <span className="font-display font-bold text-lg text-primary">T</span>
+              </div>
             </div>
-            <span className="font-display font-bold text-xl">TaskHive</span>
+            <div>
+              <span className="font-display font-bold text-xl tracking-tight">TaskHive</span>
+              <p className="text-xs text-muted-foreground font-ornate italic -mt-0.5">Artful Collaboration</p>
+            </div>
           </div>
           
           <div className="relative hidden md:block">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input 
-              placeholder="Search tasks..." 
-              className="w-72 pl-9 bg-muted/50 border-transparent focus:border-primary/30 focus:bg-card"
+              placeholder="Search the archives..." 
+              className="w-72 pl-9 bg-muted/50 border-border focus:border-primary/40 focus:bg-card font-serif"
             />
           </div>
         </div>
@@ -35,22 +40,22 @@ export const Header = ({ onCreateTask }: HeaderProps) => {
           <RemindersDropdown />
           
           {role === 'leader' && (
-            <Button onClick={onCreateTask} variant="gradient" className="gap-2">
+            <Button onClick={onCreateTask} variant="gradient" className="gap-2 font-display">
               <Plus className="w-4 h-4" />
-              <span className="hidden sm:inline">New Task</span>
+              <span className="hidden sm:inline">New Commission</span>
             </Button>
           )}
 
-          <Button variant="ghost" size="icon" onClick={signOut}>
+          <Button variant="ghost" size="icon" onClick={signOut} className="hover:bg-destructive/10 hover:text-destructive">
             <LogOut className="w-5 h-5" />
           </Button>
           
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium text-primary">
+          <div className="flex items-center gap-2 pl-2 border-l border-border">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center font-display font-semibold text-primary border border-primary/20">
               {profile?.avatar_initials || 'U'}
             </div>
             {role === 'leader' && (
-              <Crown className="w-4 h-4 text-primary" />
+              <Crown className="w-4 h-4 text-vintage-ochre" />
             )}
           </div>
         </div>

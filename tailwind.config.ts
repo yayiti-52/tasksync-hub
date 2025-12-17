@@ -14,8 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        display: ["Plus Jakarta Sans", "system-ui", "sans-serif"],
+        serif: ["Crimson Pro", "Georgia", "serif"],
+        display: ["Playfair Display", "Georgia", "serif"],
+        ornate: ["Cormorant Garamond", "Georgia", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -84,6 +85,14 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        vintage: {
+          burgundy: "hsl(350, 55%, 45%)",
+          ochre: "hsl(35, 70%, 50%)",
+          forest: "hsl(150, 45%, 35%)",
+          royal: "hsl(220, 60%, 45%)",
+          terracotta: "hsl(15, 65%, 50%)",
+          gold: "hsl(42, 60%, 55%)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -115,14 +124,19 @@ export default {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
         },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.3s ease-out",
+        "fade-in": "fade-in 0.4s ease-out",
         "slide-in": "slide-in 0.3s ease-out",
         "scale-in": "scale-in 0.2s ease-out",
         shimmer: "shimmer 2s infinite linear",
+        float: "float 3s ease-in-out infinite",
       },
     },
   },
