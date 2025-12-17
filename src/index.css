@@ -2,112 +2,105 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap');
+
 @layer base {
   :root {
-    /* Vintage Art Color Palette - Warm & Rich */
-    --background: 42 35% 94%;
-    --foreground: 25 40% 15%;
+    --background: 40 20% 98%;
+    --foreground: 220 20% 10%;
 
-    --card: 45 40% 97%;
-    --card-foreground: 25 40% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 10%;
 
-    --popover: 45 40% 97%;
-    --popover-foreground: 25 40% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 10%;
 
-    /* Rich Burgundy Primary */
-    --primary: 350 55% 45%;
-    --primary-foreground: 45 40% 97%;
+    --primary: 38 92% 50%;
+    --primary-foreground: 0 0% 100%;
 
-    /* Antique Gold Secondary */
-    --secondary: 42 60% 88%;
-    --secondary-foreground: 25 40% 25%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 20% 20%;
 
-    --muted: 42 30% 90%;
-    --muted-foreground: 25 20% 45%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 10% 46%;
 
-    /* Deep Ochre Accent */
-    --accent: 35 70% 50%;
-    --accent-foreground: 45 40% 97%;
+    --accent: 38 92% 95%;
+    --accent-foreground: 38 92% 35%;
 
-    /* Terracotta Destructive */
-    --destructive: 15 65% 50%;
-    --destructive-foreground: 45 40% 97%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    /* Forest Green Success */
-    --success: 150 45% 35%;
-    --success-foreground: 45 40% 97%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
 
-    /* Ochre Warning */
-    --warning: 40 75% 50%;
-    --warning-foreground: 25 40% 15%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
 
-    /* Royal Blue Info */
-    --info: 220 60% 45%;
-    --info-foreground: 45 40% 97%;
+    --info: 210 100% 50%;
+    --info-foreground: 0 0% 100%;
 
-    --border: 35 25% 82%;
-    --input: 35 25% 85%;
-    --ring: 350 55% 45%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 38 92% 50%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    --priority-high: 15 65% 50%;
-    --priority-medium: 40 75% 50%;
-    --priority-low: 150 45% 35%;
+    --priority-high: 0 84% 60%;
+    --priority-medium: 38 92% 50%;
+    --priority-low: 142 71% 45%;
 
-    --status-todo: 35 20% 70%;
-    --status-progress: 220 60% 45%;
-    --status-review: 280 50% 50%;
-    --status-done: 150 45% 35%;
+    --status-todo: 220 14% 80%;
+    --status-progress: 210 100% 50%;
+    --status-review: 280 70% 55%;
+    --status-done: 142 71% 45%;
 
-    --sidebar-background: 42 40% 96%;
-    --sidebar-foreground: 25 40% 15%;
-    --sidebar-primary: 350 55% 45%;
-    --sidebar-primary-foreground: 45 40% 97%;
-    --sidebar-accent: 35 70% 85%;
-    --sidebar-accent-foreground: 25 40% 25%;
-    --sidebar-border: 35 25% 82%;
-    --sidebar-ring: 350 55% 45%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 220 20% 10%;
+    --sidebar-primary: 38 92% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 38 92% 95%;
+    --sidebar-accent-foreground: 38 92% 35%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 38 92% 50%;
   }
 
   .dark {
-    /* Dark Vintage - Deep & Moody */
-    --background: 25 30% 10%;
-    --foreground: 42 35% 90%;
+    --background: 220 20% 8%;
+    --foreground: 40 20% 98%;
 
-    --card: 25 28% 14%;
-    --card-foreground: 42 35% 90%;
+    --card: 220 20% 12%;
+    --card-foreground: 40 20% 98%;
 
-    --popover: 25 28% 14%;
-    --popover-foreground: 42 35% 90%;
+    --popover: 220 20% 12%;
+    --popover-foreground: 40 20% 98%;
 
-    --primary: 350 50% 55%;
-    --primary-foreground: 25 30% 10%;
+    --primary: 38 92% 55%;
+    --primary-foreground: 220 20% 8%;
 
-    --secondary: 35 30% 22%;
-    --secondary-foreground: 42 35% 85%;
+    --secondary: 220 20% 18%;
+    --secondary-foreground: 40 20% 90%;
 
-    --muted: 25 25% 18%;
-    --muted-foreground: 42 20% 55%;
+    --muted: 220 20% 18%;
+    --muted-foreground: 220 10% 60%;
 
-    --accent: 35 60% 45%;
-    --accent-foreground: 45 40% 97%;
+    --accent: 38 50% 20%;
+    --accent-foreground: 38 92% 70%;
 
-    --destructive: 15 55% 45%;
-    --destructive-foreground: 45 40% 97%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 25 25% 22%;
-    --input: 25 25% 22%;
-    --ring: 350 50% 55%;
+    --border: 220 20% 20%;
+    --input: 220 20% 20%;
+    --ring: 38 92% 55%;
 
-    --sidebar-background: 25 28% 12%;
-    --sidebar-foreground: 42 35% 90%;
-    --sidebar-primary: 350 50% 55%;
-    --sidebar-primary-foreground: 25 30% 10%;
-    --sidebar-accent: 35 40% 25%;
-    --sidebar-accent-foreground: 42 35% 85%;
-    --sidebar-border: 25 25% 22%;
-    --sidebar-ring: 350 50% 55%;
+    --sidebar-background: 220 20% 10%;
+    --sidebar-foreground: 40 20% 98%;
+    --sidebar-primary: 38 92% 55%;
+    --sidebar-primary-foreground: 220 20% 8%;
+    --sidebar-accent: 38 50% 20%;
+    --sidebar-accent-foreground: 38 92% 70%;
+    --sidebar-border: 220 20% 20%;
+    --sidebar-ring: 38 92% 55%;
   }
 }
 
@@ -117,8 +110,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-serif antialiased;
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23a08060' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    @apply bg-background text-foreground font-sans antialiased;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -128,103 +120,56 @@
 
 @layer utilities {
   .glass {
-    @apply bg-card/90 backdrop-blur-sm border border-border/60;
+    @apply bg-card/80 backdrop-blur-xl border border-border/50;
   }
 
   .gradient-primary {
-    background: linear-gradient(135deg, hsl(350, 55%, 45%) 0%, hsl(350, 50%, 55%) 50%, hsl(35, 70%, 50%) 100%);
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(38, 92%, 60%) 100%);
   }
 
   .gradient-subtle {
-    background: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(42, 30%, 88%) 100%);
-  }
-
-  .gradient-vintage {
-    background: linear-gradient(135deg, hsl(42, 40%, 96%) 0%, hsl(35, 35%, 92%) 50%, hsl(42, 40%, 94%) 100%);
-  }
-
-  .gradient-art {
-    background: linear-gradient(45deg, hsl(350, 55%, 45%) 0%, hsl(280, 50%, 50%) 50%, hsl(220, 60%, 45%) 100%);
+    background: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--muted)) 100%);
   }
 
   .shadow-glow {
-    box-shadow: 0 0 40px hsl(350, 55%, 45%, 0.15);
+    box-shadow: 0 0 40px hsl(var(--primary) / 0.15);
   }
 
   .shadow-card {
-    box-shadow: 
-      0 1px 2px hsl(25, 40%, 15%, 0.04),
-      0 4px 12px hsl(25, 40%, 15%, 0.08),
-      0 0 0 1px hsl(35, 25%, 82%, 0.5);
+    box-shadow: 0 1px 3px hsl(var(--foreground) / 0.05), 0 10px 30px -10px hsl(var(--foreground) / 0.1);
   }
 
   .shadow-card-hover {
-    box-shadow: 
-      0 4px 12px hsl(25, 40%, 15%, 0.1),
-      0 12px 32px hsl(25, 40%, 15%, 0.12),
-      0 0 0 1px hsl(350, 55%, 45%, 0.2);
-  }
-
-  .ornament {
-    position: relative;
-  }
-
-  .ornament::before,
-  .ornament::after {
-    content: '❧';
-    @apply text-primary/30 mx-3;
-  }
-
-  .flourish {
-    @apply relative inline-block;
-  }
-
-  .flourish::after {
-    content: '';
-    @apply absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary/40 to-transparent;
+    box-shadow: 0 4px 12px hsl(var(--foreground) / 0.08), 0 20px 40px -15px hsl(var(--foreground) / 0.15);
   }
 }
 
 @layer components {
   .task-card {
-    @apply bg-card rounded-lg border border-border shadow-card transition-all duration-300;
-    background-image: linear-gradient(135deg, transparent 0%, hsl(42, 40%, 97%) 100%);
+    @apply bg-card rounded-lg border border-border shadow-card transition-all duration-200;
   }
 
   .task-card:hover {
-    @apply shadow-card-hover border-primary/30 -translate-y-1;
+    @apply shadow-card-hover border-primary/20 -translate-y-0.5;
   }
 
   .priority-badge {
-    @apply inline-flex items-center px-2.5 py-1 rounded text-xs font-medium tracking-wide uppercase;
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
   }
 
   .priority-high {
-    @apply bg-[hsl(var(--priority-high)/0.12)] text-[hsl(var(--priority-high))] border border-[hsl(var(--priority-high)/0.2)];
+    @apply bg-[hsl(var(--priority-high)/0.15)] text-[hsl(var(--priority-high))];
   }
 
   .priority-medium {
-    @apply bg-[hsl(var(--priority-medium)/0.12)] text-[hsl(var(--priority-medium))] border border-[hsl(var(--priority-medium)/0.2)];
+    @apply bg-[hsl(var(--priority-medium)/0.15)] text-[hsl(var(--priority-medium))];
   }
 
   .priority-low {
-    @apply bg-[hsl(var(--priority-low)/0.12)] text-[hsl(var(--priority-low))] border border-[hsl(var(--priority-low)/0.2)];
+    @apply bg-[hsl(var(--priority-low)/0.15)] text-[hsl(var(--priority-low))];
   }
 
   .status-indicator {
-    @apply w-2.5 h-2.5 rounded-full ring-2 ring-offset-1 ring-offset-background;
-  }
-
-  .vintage-border {
-    @apply border-2 border-double border-border;
-  }
-
-  .art-frame {
-    @apply relative p-1 rounded-lg;
-    background: linear-gradient(135deg, hsl(35, 70%, 50%) 0%, hsl(350, 55%, 45%) 50%, hsl(35, 70%, 50%) 100%);
-  }
-
-  .art-frame > * {
-    @apply bg-card rounded;
+    @apply w-2 h-2 rounded-full;
   }
 }
