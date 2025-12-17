@@ -109,96 +109,147 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">T</span>
+    <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Decorative Corner Ornaments */}
+      <div className="absolute top-8 left-8 text-4xl text-primary/20 font-ornate select-none">❧</div>
+      <div className="absolute top-8 right-8 text-4xl text-primary/20 font-ornate select-none rotate-180">❧</div>
+      <div className="absolute bottom-8 left-8 text-4xl text-primary/20 font-ornate select-none -rotate-90">❧</div>
+      <div className="absolute bottom-8 right-8 text-4xl text-primary/20 font-ornate select-none rotate-90">❧</div>
+
+      {/* Decorative Background Shapes */}
+      <div className="absolute top-1/4 -left-20 w-96 h-96 bg-vintage-burgundy/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-vintage-ochre/5 rounded-full blur-3xl" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-vintage-gold/3 rounded-full blur-3xl" />
+
+      <div className="w-full max-w-md relative z-10">
+        {/* Logo & Title */}
+        <div className="text-center mb-10">
+          <div className="flex items-center justify-center gap-3 mb-5">
+            <div className="art-frame">
+              <div className="w-14 h-14 flex items-center justify-center">
+                <span className="font-display font-bold text-2xl text-primary">T</span>
+              </div>
             </div>
-            <span className="font-display font-bold text-2xl">TaskHive</span>
           </div>
-          <p className="text-muted-foreground">
-            {isLogin ? 'Welcome back! Sign in to continue.' : 'Create your account to get started.'}
-          </p>
+          <h1 className="font-display text-4xl font-bold text-foreground mb-2 tracking-tight">
+            TaskHive
+          </h1>
+          <div className="flex items-center justify-center gap-3 text-muted-foreground">
+            <span className="text-primary/40">✦</span>
+            <p className="font-ornate text-lg italic">
+              {isLogin ? 'Welcome back, dear artisan' : 'Begin your creative journey'}
+            </p>
+            <span className="text-primary/40">✦</span>
+          </div>
         </div>
 
-        <div className="bg-card rounded-xl border border-border shadow-card p-8">
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {!isLogin && (
+        {/* Auth Card */}
+        <div className="art-frame animate-fade-in">
+          <div className="p-8">
+            {/* Decorative Header Line */}
+            <div className="flex items-center justify-center gap-4 mb-8">
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
+              <span className="text-primary/60 text-sm font-ornate tracking-widest uppercase">
+                {isLogin ? 'Sign In' : 'Register'}
+              </span>
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {!isLogin && (
+                <div className="space-y-2">
+                  <Label htmlFor="displayName" className="font-display text-sm">
+                    Display Name
+                  </Label>
+                  <Input
+                    id="displayName"
+                    type="text"
+                    placeholder="Your artistic name"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    className={`font-serif ${errors.displayName ? 'border-destructive' : ''}`}
+                  />
+                  {errors.displayName && (
+                    <p className="text-xs text-destructive font-serif italic">{errors.displayName}</p>
+                  )}
+                </div>
+              )}
+
               <div className="space-y-2">
-                <Label htmlFor="displayName">Display Name</Label>
+                <Label htmlFor="email" className="font-display text-sm">
+                  Email Address
+                </Label>
                 <Input
-                  id="displayName"
-                  type="text"
-                  placeholder="Your name"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  className={errors.displayName ? 'border-destructive' : ''}
+                  id="email"
+                  type="email"
+                  placeholder="artist@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={`font-serif ${errors.email ? 'border-destructive' : ''}`}
                 />
-                {errors.displayName && (
-                  <p className="text-xs text-destructive">{errors.displayName}</p>
+                {errors.email && (
+                  <p className="text-xs text-destructive font-serif italic">{errors.email}</p>
                 )}
               </div>
-            )}
 
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className={errors.email ? 'border-destructive' : ''}
-              />
-              {errors.email && (
-                <p className="text-xs text-destructive">{errors.email}</p>
-              )}
+              <div className="space-y-2">
+                <Label htmlFor="password" className="font-display text-sm">
+                  Password
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={`font-serif ${errors.password ? 'border-destructive' : ''}`}
+                />
+                {errors.password && (
+                  <p className="text-xs text-destructive font-serif italic">{errors.password}</p>
+                )}
+              </div>
+
+              <Button 
+                type="submit" 
+                variant="gradient" 
+                className="w-full font-display tracking-wide text-base py-5 mt-6" 
+                disabled={isLoading}
+              >
+                {isLoading && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                {isLogin ? 'Enter the Studio' : 'Join the Guild'}
+              </Button>
+            </form>
+
+            {/* Decorative Footer Line */}
+            <div className="flex items-center justify-center gap-4 mt-8">
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
+              <span className="text-primary/40">❦</span>
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={errors.password ? 'border-destructive' : ''}
-              />
-              {errors.password && (
-                <p className="text-xs text-destructive">{errors.password}</p>
-              )}
+            <div className="mt-6 text-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsLogin(!isLogin);
+                  setErrors({});
+                }}
+                className="text-sm text-muted-foreground hover:text-primary transition-colors font-ornate italic"
+              >
+                {isLogin ? "New here? Create an account" : 'Already a member? Sign in'}
+              </button>
             </div>
-
-            <Button 
-              type="submit" 
-              variant="gradient" 
-              className="w-full" 
-              disabled={isLoading}
-            >
-              {isLoading && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-              {isLogin ? 'Sign In' : 'Create Account'}
-            </Button>
-          </form>
-
-          <div className="mt-6 text-center">
-            <button
-              type="button"
-              onClick={() => {
-                setIsLogin(!isLogin);
-                setErrors({});
-              }}
-              className="text-sm text-muted-foreground hover:text-primary transition-colors"
-            >
-              {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
-            </button>
           </div>
         </div>
 
-        <p className="text-xs text-center text-muted-foreground mt-6">
-          {!isLogin && 'The first user to sign up becomes the team leader.'}
+        <p className="text-xs text-center text-muted-foreground mt-8 font-ornate italic">
+          {!isLogin && (
+            <>
+              <span className="text-primary/40 mr-2">✦</span>
+              The first artisan becomes the guild master
+              <span className="text-primary/40 ml-2">✦</span>
+            </>
+          )}
         </p>
       </div>
     </div>
