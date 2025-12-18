@@ -8,6 +8,7 @@ export interface Profile {
   user_id: string;
   display_name: string;
   avatar_initials: string;
+  expertise: string[];
 }
 
 export interface Task {
