@@ -1,4 +1,4 @@
-import { Search, Plus, LogOut, Crown } from 'lucide-react';
+import { Search, Plus, LogOut, Crown, History } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/hooks/useAuth';
@@ -6,9 +6,10 @@ import { RemindersDropdown } from './RemindersDropdown';
 
 interface HeaderProps {
   onCreateTask: () => void;
+  onViewHistory?: () => void;
 }
 
-export const Header = ({ onCreateTask }: HeaderProps) => {
+export const Header = ({ onCreateTask, onViewHistory }: HeaderProps) => {
   const { profile, role, signOut } = useAuth();
 
   return (
@@ -33,6 +34,13 @@ export const Header = ({ onCreateTask }: HeaderProps) => {
 
         <div className="flex items-center gap-3">
           <RemindersDropdown />
+          
+          {role === 'leader' && onViewHistory && (
+            <Button variant="outline" size="sm" onClick={onViewHistory} className="gap-2">
+              <History className="w-4 h-4" />
+              <span className="hidden sm:inline">History</span>
+            </Button>
+          )}
           
           {role === 'leader' && (
             <Button onClick={onCreateTask} variant="gradient" className="gap-2">

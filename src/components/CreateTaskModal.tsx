@@ -131,7 +131,15 @@ export const CreateTaskModal = ({ isOpen, onClose, memberProfiles, onCreateTask 
                   ) : (
                     memberProfiles.map(member => (
                       <SelectItem key={member.id} value={member.id}>
-                        {member.display_name}
+                        <div className="flex flex-col items-start">
+                          <span>{member.display_name}</span>
+                          {member.expertise && member.expertise.length > 0 && (
+                            <span className="text-xs text-muted-foreground">
+                              {member.expertise.slice(0, 3).join(', ')}
+                              {member.expertise.length > 3 && '...'}
+                            </span>
+                          )}
+                        </div>
                       </SelectItem>
                     ))
                   )}

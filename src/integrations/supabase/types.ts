@@ -19,6 +19,7 @@ export type Database = {
           avatar_initials: string
           created_at: string
           display_name: string
+          expertise: string[] | null
           id: string
           updated_at: string
           user_id: string
@@ -27,6 +28,7 @@ export type Database = {
           avatar_initials?: string
           created_at?: string
           display_name: string
+          expertise?: string[] | null
           id?: string
           updated_at?: string
           user_id: string
@@ -35,6 +37,7 @@ export type Database = {
           avatar_initials?: string
           created_at?: string
           display_name?: string
+          expertise?: string[] | null
           id?: string
           updated_at?: string
           user_id?: string
