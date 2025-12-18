@@ -1,15 +1,18 @@
-import { Search, Plus, LogOut, Crown, History } from 'lucide-react';
+import { Search, Plus, LogOut, Crown, History, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
 import { RemindersDropdown } from './RemindersDropdown';
 
 interface HeaderProps {
   onCreateTask: () => void;
   onViewHistory?: () => void;
+  onViewQueries?: () => void;
+  pendingQueryCount?: number;
 }
 
-export const Header = ({ onCreateTask, onViewHistory }: HeaderProps) => {
+export const Header = ({ onCreateTask, onViewHistory, onViewQueries, pendingQueryCount = 0 }: HeaderProps) => {
   const { profile, role, signOut } = useAuth();
 
   return (
@@ -34,6 +37,18 @@ export const Header = ({ onCreateTask, onViewHistory }: HeaderProps) => {
 
         <div className="flex items-center gap-3">
           <RemindersDropdown />
+          
+          {onViewQueries && (
+            <Button variant="outline" size="sm" onClick={onViewQueries} className="gap-2 relative">
+              <MessageCircle className="w-4 h-4" />
+              <span className="hidden sm:inline">Queries</span>
+              {pendingQueryCount > 0 && (
+                <Badge variant="destructive" className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs flex items-center justify-center">
+                  {pendingQueryCount}
+                </Badge>
+              )}
+            </Button>
+          )}
           
           {role === 'leader' && onViewHistory && (
             <Button variant="outline" size="sm" onClick={onViewHistory} className="gap-2">

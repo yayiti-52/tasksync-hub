@@ -6,9 +6,13 @@ import { TaskDetailModal } from '@/components/TaskDetailModal';
 import { CreateTaskModal } from '@/components/CreateTaskModal';
 import { CompletedTasksHistory } from '@/components/CompletedTasksHistory';
 import { ExpertiseEditor } from '@/components/ExpertiseEditor';
+import { RaiseQueryModal } from '@/components/RaiseQueryModal';
+import { QueriesPanel } from '@/components/QueriesPanel';
 import { useTasks, Task } from '@/hooks/useTasks';
+import { useQueries } from '@/hooks/useQueries';
 import { useAuth } from '@/hooks/useAuth';
-import { Loader2 } from 'lucide-react';
+import { Loader2, HelpCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const Index = () => {
   const { role, profile } = useAuth();
@@ -25,10 +29,20 @@ const Index = () => {
     refetch,
   } = useTasks();
   
+  const {
+    createQuery,
+    respondToQuery,
+    getReceivedQueries,
+    getSentQueries,
+    getPendingCount,
+  } = useQueries();
+  
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isQueryOpen, setIsQueryOpen] = useState(false);
+  const [isQueriesPanelOpen, setIsQueriesPanelOpen] = useState(false);
   const [expertise, setExpertise] = useState<string[]>([]);
   
   // Sync expertise when profiles are loaded
@@ -42,12 +56,27 @@ const Index = () => {
   // Filter out completed tasks for the main board
   const activeTasks = tasks.filter(t => t.status !== 'done');
 
+  // Count active tasks per member
   const taskCountsByMember = tasks.reduce((acc, task) => {
     if (task.status !== 'done' && task.assignee_id) {
       acc[task.assignee_id] = (acc[task.assignee_id] || 0) + 1;
     }
     return acc;
   }, {} as Record<string, number>);
+
+  // Count completed tasks per member (work done stats)
+  const completedCountsByMember = tasks.reduce((acc, task) => {
+    if (task.status === 'done' && task.assignee_id) {
+      acc[task.assignee_id] = (acc[task.assignee_id] || 0) + 1;
+    }
+    return acc;
+  }, {} as Record<string, number>);
+
+  // Get leader profiles for query modal
+  const leaderProfiles = profiles.filter(p => {
+    const profileRole = getProfileRole(p.id);
+    return profileRole === 'leader';
+  });
 
   const handleTaskClick = (task: Task) => {
     setSelectedTask(task);
@@ -82,23 +111,36 @@ const Index = () => {
       <Header 
         onCreateTask={() => setIsCreateOpen(true)} 
         onViewHistory={() => setIsHistoryOpen(true)}
+        onViewQueries={() => setIsQueriesPanelOpen(true)}
+        pendingQueryCount={getPendingCount()}
       />
       
       <div className="flex">
         <TeamSidebar 
           profiles={profiles} 
           taskCounts={taskCountsByMember}
+          completedCounts={completedCountsByMember}
           getProfileRole={getProfileRole}
         />
         
         <main className="flex-1 py-6 overflow-hidden">
           <div className="px-6 mb-6">
-            <h1 className="text-2xl font-display font-bold">Project Tasks</h1>
-            <p className="text-muted-foreground mt-1">
-              {role === 'leader' 
-                ? 'Create and manage your team\'s tasks' 
-                : 'Track and update your assigned tasks'}
-            </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-display font-bold">Project Tasks</h1>
+                <p className="text-muted-foreground mt-1">
+                  {role === 'leader' 
+                    ? 'Create and manage your team\'s tasks' 
+                    : 'Track and update your assigned tasks'}
+                </p>
+              </div>
+              {role === 'member' && (
+                <Button variant="outline" onClick={() => setIsQueryOpen(true)} className="gap-2">
+                  <HelpCircle className="w-4 h-4" />
+                  Raise Query
+                </Button>
+              )}
+            </div>
           </div>
           
           {/* Expertise editor for members */}
@@ -158,6 +200,24 @@ const Index = () => {
         onClose={() => setIsHistoryOpen(false)}
         tasks={tasks}
         profiles={profiles}
+      />
+      
+      <RaiseQueryModal
+        isOpen={isQueryOpen}
+        onClose={() => setIsQueryOpen(false)}
+        leaders={leaderProfiles}
+        tasks={tasks}
+        onSubmit={createQuery}
+      />
+      
+      <QueriesPanel
+        isOpen={isQueriesPanelOpen}
+        onClose={() => setIsQueriesPanelOpen(false)}
+        receivedQueries={getReceivedQueries()}
+        sentQueries={getSentQueries()}
+        profiles={profiles}
+        isLeader={role === 'leader'}
+        onRespond={respondToQuery}
       />
     </div>
   );
