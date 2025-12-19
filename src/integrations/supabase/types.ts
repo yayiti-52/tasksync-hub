@@ -44,6 +44,53 @@ export type Database = {
         }
         Relationships: []
       }
+      queries: {
+        Row: {
+          created_at: string
+          from_profile_id: string
+          id: string
+          message: string
+          responded_at: string | null
+          response: string | null
+          status: string
+          subject: string
+          task_id: string | null
+          to_profile_id: string
+        }
+        Insert: {
+          created_at?: string
+          from_profile_id: string
+          id?: string
+          message: string
+          responded_at?: string | null
+          response?: string | null
+          status?: string
+          subject: string
+          task_id?: string | null
+          to_profile_id: string
+        }
+        Update: {
+          created_at?: string
+          from_profile_id?: string
+          id?: string
+          message?: string
+          responded_at?: string | null
+          response?: string | null
+          status?: string
+          subject?: string
+          task_id?: string | null
+          to_profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "queries_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       task_comments: {
         Row: {
           author_id: string
